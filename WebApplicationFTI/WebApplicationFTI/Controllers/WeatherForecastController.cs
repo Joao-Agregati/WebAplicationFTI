@@ -23,17 +23,80 @@ namespace WebApplicationFTI.Controllers
             _logger = logger;
         }
 
-        [HttpGet]
-        public IEnumerable<WeatherForecast> Get()
+        [HttpGet("soma/{valor1}/{valor2}")]
+        public IActionResult Getsoma(string valor1, string valor2)
         {
-            var rng = new Random();
-            return Enumerable.Range(1, 5).Select(index => new WeatherForecast
+            if (IsNumeric(valor1) && IsNumeric(valor2))
             {
-                Date = DateTime.Now.AddDays(index),
-                TemperatureC = rng.Next(-20, 55),
-                Summary = Summaries[rng.Next(Summaries.Length)]
-            })
-            .ToArray();
+                var soma = ConvertToDecimal(valor1) + ConvertToDecimal(valor2);
+                return Ok(soma.ToString());
+            }
+
+            return BadRequest("Valor inválido");
+        }
+        [HttpGet("menos/{valor1}/{valor2}")]
+        public IActionResult Getmenos(string valor1, string valor2)
+        {
+            if (IsNumeric(valor1) && IsNumeric(valor2))
+            {
+                var soma = ConvertToDecimal(valor1) - ConvertToDecimal(valor2);
+                return Ok(soma.ToString());
+            }
+
+            return BadRequest("Valor inválido");
+        }
+        [HttpGet("vezes/{valor1}/{valor2}")]
+        public IActionResult Getvezes(string valor1, string valor2)
+        {
+            if (IsNumeric(valor1) && IsNumeric(valor2))
+            {
+                var soma = ConvertToDecimal(valor1) * ConvertToDecimal(valor2);
+                return Ok(soma.ToString());
+            }
+
+            return BadRequest("Valor inválido");
+        }
+        [HttpGet("divide/{valor1}/{valor2}")]
+        public IActionResult Getdivide(string valor1, string valor2)
+        {
+            if (IsNumeric(valor1) && IsNumeric(valor2))
+            {
+                var soma = ConvertToDecimal(valor1) / ConvertToDecimal(valor2);
+                return Ok(soma.ToString());
+            }
+
+            return BadRequest("Valor inválido");
+        }
+        [HttpGet("media/{valor1}/{valor2}")]
+        public IActionResult Getmedia(string valor1, string valor2)
+        {
+            if (IsNumeric(valor1) && IsNumeric(valor2))
+            {
+                var soma = (ConvertToDecimal(valor1) + ConvertToDecimal(valor2)) / 2;
+                return Ok(soma.ToString());
+            }
+
+            return BadRequest("Valor inválido");
+        }
+
+        private decimal ConvertToDecimal(string valor1)
+        {
+            decimal decimalValue;
+
+            if (decimal.TryParse(valor1, out decimalValue))
+            {
+                return decimalValue;
+            }
+            return 0;
+        }
+
+        private bool IsNumeric(string valor1)
+        {
+            double number;
+            bool isNumber = double.TryParse(valor1,System.Globalization.NumberStyles.Any,System.Globalization.NumberFormatInfo.InvariantInfo,out number);
+
+
+            return isNumber;
         }
     }
 }
